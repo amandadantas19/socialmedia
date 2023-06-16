@@ -201,9 +201,7 @@ $(function() {
   	setTimeout(function() {
   		$('#msg_all_done').show();
       $("#loader").hide();
-    },0);
-
-  	//}, 8000);
+    }, 8000);
 	
   	$('#submit_fb_login').on('click',function() {
 			$('#fb_login').hide();
