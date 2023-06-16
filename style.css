@@ -59,6 +59,17 @@ img.avatar {
   margin-bottom: 0;
 }
 
+.tophalf h2 {
+	color: #3B5999;
+  font-variant: normal;
+	font-size: 16px;
+	text-transform:capitalize;
+  margin-left: 85px;
+  padding-left: 0px;
+  margin-top: 35px;
+  margin-bottom: 0;
+}
+
 div.masonry {
     width: 850px;
 }
@@ -67,7 +78,7 @@ div.masonry {
 .bottomhalf {
 	clear: both;
 	color: #3B5999;
-	height: 15px;
+	height: 35px;
 	background-color: #f5f6fa;
 	border: 1px solid #d5d7e0;	
 	padding: 5px;
@@ -76,8 +87,13 @@ div.masonry {
 }
 
 .btn-like {
-    padding: 0;
+  padding: 0;
 	margin-top: -2px;
+}
+
+.btn-dislike {
+  padding: 0;
+  margin-top: -2px;
 }
 
 button.btn {
@@ -111,6 +127,9 @@ span.badge.badge-custom.userslikes {
     color: #5cff26 !important;
 }
 
+span.badge.badge-custom.usersdislikes {
+  color: #ff2626 !important;
+}
 
 .btn.disabled,
 .btn[disabled] {

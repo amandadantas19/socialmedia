@@ -193,6 +193,7 @@ You can edit the instructions text.
 
     	<img src="{{avatar}}" class="avatar">
     	<h3>{{username}}</h3>
+      <h2>Sexism score 81 </h2>
 
     	<div class="main">
     		<p>{{text}}</p>
@@ -204,12 +205,12 @@ You can edit the instructions text.
 
     <div class="bottomhalf">
     	Likes <span class="badge badge-custom userslikes" data-likes="{{likes}}" data-usernames="{{usernames}}">0</span>
+      Dislikes <span class="badge badge-custom usersdislikes" data-dislikes="{{dislikes}}" data-usernames="{{usernames}}">0</span>
     </div>
     </div>
 
   {{/posts}}  
 </script>
-
 
 <script type="template/text" id="otherstmp">
   {{#posts}}
@@ -218,6 +219,7 @@ You can edit the instructions text.
 
     	<img src="{{avatar}}" class="avatar">
         <h3>{{username}}</h3>
+        <h2>Sexism score {{score}} </h2>
     	
     	<div class="main">
     		
@@ -229,10 +231,16 @@ You can edit the instructions text.
     </div>	
 
     <div class="bottomhalf">
-    	Likes <span class="badge badge-custom otherslikes" data-likes="{{likes}}">0</span>
-    	<button type="submit" class="btn pull-right btn-like btn-custom btn-deround">Like <i class="icon-thumbs-up icon-white"></i></button>
+      <div> 
+        Likes <span class="badge badge-custom otherslikes" data-likes="{{likes}}">0</span>
+        <button type="submit" class="btn pull-right btn-like btn-custom btn-deround">Like<i class="icon-thumbs-up icon-white"></i></button>
+      </div>
+      <div>
+        Dislikes <span class="badge badge-custom othersdislikes" data-dislikes="{{dislikes}}">0</span>
+        <button type="submit" class="btn pull-right btn-dislike btn-custom btn-deround">Dislike<i class="icon-thumbs-down icon-white"></i></button>
+      </div>
     </div>
-
+    
     </div>
   {{/posts}}  
 </script>

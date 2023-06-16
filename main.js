@@ -35,20 +35,26 @@ $(function() {
     // Each received "like" is indicated by the timepoint (in ms) at which the "like" will appear. To change the number of "likes" in each condition, add or remove timepoints. Make sure that every timepoint (except the first) is preceded by a single comma. 
 	// In cases with only 1 "like," a second "like" is added with time point 9999999. This "like" is added for programming purposes and is never executed, as it is outside the task time
 
-    // In condition 1, the participant will receive 1 like at the following timepoint (in ms). Default: [12000, 9999999]
-    settings.condition_1_likes = [12000, 9999999]; 
+    // In condition 1, the participant will receive 0 like and 6 dislike at the following timepoint (in ms). Default: [12000, 9999999]
+    settings.condition_1_likes = [];
+    settings.condition_1_dislikes = [10000,15000,35000,40200,54000,82000] ;
 
-    // In condition 2, user will receive 6 likes at the following timepoints (in ms). Default: [10000, 15000,35000,80000,1320000,150000]
-    settings.condition_2_likes = [10000, 15000,35000,80000,1320000,150000];  
+    // In condition 2, user will receive 1 like and 1 dislike at the following timepoints (in ms). Default: [10000, 15000,35000,80000,1320000,150000]
+    settings.condition_2_likes = [10000];
+    settings.condition_2_dislikes = [15000];
     
-    // In condition 3, user will receive 9 likes at the following timepoints (in ms). Default: [10000, 11000,15000,35000,80000,100000,110000,150000,20000]
-    settings.condition_3_likes = [10000, 11000,15000,35000,80000,100000,110000,150000,20000]; 
+    // In condition 3, user will receive 6 likes and 2 dislike at the following timepoints (in ms). Default: [10000, 11000,15000,35000,80000,100000,110000,150000,20000]
+    settings.condition_3_likes = [10000, 11000,15000,17000,35000,80000];
+    settings.condition_3_dislikes = [10000, 11000]; 
 
 	// **Others' likes**     
 	// To keep the total distribution of "likes" constant across conditions, The "likes" received by one group member can be adjusted according to the participant's. By default, the other group member receives 9 "likes" in the participant-ostracism condition, 5 in the participant-inclusion condtion, and 1 in the participant-overinclusion condtion.
-	settings.condition_1_adjusted_likes = [12000, 14000,15000,35000,80000,100000,110000,150000,20000]; // 9
-	settings.condition_2_adjusted_likes = [12000, 14000,15000,35000,80000]; // 5
-	settings.condition_3_adjusted_likes = [12000, 9999999]; //1	
+	settings.condition_1_adjusted_likes = [];
+  settings.condition_1_adjusted_dislikes = [10000,15000,35000,40200,54000,82000];
+	settings.condition_2_adjusted_likes = [10000];
+  settings.condition_2_adjusted_dislikes = [15000];
+	settings.condition_3_adjusted_likes = [10000, 11000,15000,17000,35000,80000];
+  settings.condition_3_adjusted_dislikes = [10000, 11000];
 	
     // Usernames by which the participant will receive "likes"
 	// If group member names are changed, these should be changed accordingly.
@@ -113,7 +119,7 @@ $(function() {
   	$('#avatar').show();
 
     var avatars = window.settings.numberofavatars;    
-  	for(var i=0; i<avatars; i++) 
+  	for(var i=1; i<avatars; i++) 
   	{ 
   		$('.avatars').append('<img id="avatar_' + i+ '" src="avatars/avatar_' + i + '.png" class="avatar" />');
   	} 
@@ -194,8 +200,10 @@ $(function() {
 
   	setTimeout(function() {
   		$('#msg_all_done').show();
-  		$("#loader").hide();
-  	}, 8000);
+      $("#loader").hide();
+    },0);
+
+  	//}, 8000);
 	
   	$('#submit_fb_login').on('click',function() {
 			$('#fb_login').hide();
@@ -225,6 +233,7 @@ $(function() {
 			  "username": window.username,
 			  "text": window.description,
 			  "likes": window.settings.condition_likes,
+        "dislikes": window.settings.condition_dislikes,
 			  "usernames": window.settings.likes_by
 			}
 		  ]
@@ -259,7 +268,20 @@ $(function() {
 	  $('.userslikes').each(function() {
   		var that = $(this);
   		var usernames = $(this).data('usernames').split(",");
-  		var times = $(this).data('likes').split(",");
+  		//var times = $(this).data('likes').split(",");
+
+      var array = $(this).data('likes').toString();
+      if (array.indexOf(",") != -1){
+        var times = array.split(",");
+      }
+      else{
+        if (array != ''){
+          var times = [array]; 
+        } 
+        else {
+          var times = [];
+        }
+      }
 
   		for(var i=0; i<times.length; i++) 
   		{ 
@@ -274,12 +296,58 @@ $(function() {
   			}, times[i], themsg);
   		} 		
 	  });
+
+    // When user receives dislikes
+	  $('.usersdislikes').each(function() {
+  		var that = $(this);
+  		var usernames = $(this).data('usernames').split(",");
+  		//var times = $(this).data('dislikes').split(",");
+      
+      var array = $(this).data('dislikes').toString();
+      if (array.indexOf(",") != -1){
+        var times = array.split(",");
+      }
+      else{
+        if (array != ''){
+          var times = [array]; 
+        } 
+        else {
+          var times = [];
+        }
+      }
+
+      for(var i=0; i<times.length; i++) 
+  		{ 
+  			times[i] = +times[i]; 
+  			
+  			themsg = usernames[times.length-i] + " disliked your post";
+
+  			setTimeout(function(themsg) {
+  				that.text(parseInt(that.text()) + 1);
+  				alertify.success(themsg)
+
+  			}, times[i], themsg);
+  		} 		
+	  });
 	  
     // When others receive likes
 	  $('.otherslikes').each(function() {
   		var that = $(this);
-  		var times = $(this).data('likes').split(",");
+  		//var times = $(this).data('likes').split(",");
   		
+      var array = $(this).data('likes').toString();
+      if (array.indexOf(",") != -1){
+        var times = array.split(",");
+      }
+      else{
+        if (array != ''){
+          var times = [array]; 
+        } 
+        else {
+          var times = [];
+        }
+      }
+
   		for(var i=0; i<times.length; i++) 
   		{ 
   			times[i] = +times[i]; 
@@ -290,10 +358,44 @@ $(function() {
   			
   		} 
 	  });
-	 
+
+    // When others receive dislikes
+	  $('.othersdislikes').each(function() {
+  		var that = $(this);
+      var array = $(this).data('dislikes').toString();
+      if (array.indexOf(",") != -1){
+        var times = array.split(",");
+      }
+      else{
+        if (array != ''){
+          var times = [array]; 
+        } 
+        else {
+          var times = [];
+        }
+      }
+      
+      for(var i=0; i<times.length; i++) 
+  		  { 
+  			  times[i] = +times[i]; 
+  			
+  			  setTimeout(function () {
+  				  that.text(parseInt(that.text()) + 1);
+  			  }, times[i]);
+  			
+  		  }
+	  });
 
     // Initialize like buttons
 	  $('.btn-like').on('click', function() {
+		  $(this).prev().text(parseInt($(this).prev().text()) + 1);
+      // Like buttons can only be clicked once
+		  $(this).attr("disabled", true);
+	  });
+
+
+    // Initialize dislike buttons
+	  $('.btn-dislike').on('click', function() {
 		  $(this).prev().text(parseInt($(this).prev().text()) + 1);
       // Like buttons can only be clicked once
 		  $(this).attr("disabled", true);
@@ -367,14 +469,20 @@ $(function() {
 		case 1:
 			window.settings.condition_likes = settings.condition_1_likes;
 			window.others.posts[1].likes = settings.condition_1_adjusted_likes;
+      window.settings.condition_dislikes = settings.condition_1_dislikes;
+			window.others.posts[1].dislikes = settings.condition_1_adjusted_dislikes;
 			break;
 		case 2:
 			window.settings.condition_likes = settings.condition_2_likes;
 			window.others.posts[1].likes = settings.condition_2_adjusted_likes;
+      window.settings.condition_dislikes = settings.condition_2_dislikes;
+			window.others.posts[1].dislikes = settings.condition_2_adjusted_dislikes;
 			break;
 		case 3:
 			window.settings.condition_likes = settings.condition_3_likes;
 			window.others.posts[1].likes = settings.condition_3_adjusted_likes;
+      window.settings.condition_dislikes = settings.condition_3_dislikes;
+			window.others.posts[1].dislikes = settings.condition_3_adjusted_dislikes;
 			break;
 	}	
 	  
